@@ -37,9 +37,9 @@ export async function getAllTvShows(req, res) {
 
 export async function getTrendingTv(req, res) {
   const { page } = req.params || 1;
-  const { lang } = req.query;
+  const { lang,count } = req.query;
 
-  const perPage = 10;
+  const perPage = count || 10;
   const language = lang || "en-US";
 
   try {
