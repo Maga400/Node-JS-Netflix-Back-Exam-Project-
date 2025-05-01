@@ -12,9 +12,9 @@ import { fetchFromTMDB } from "../services/tmdb.service.js";
 
 export async function getAllMovies(req, res) {
   const { page } = req.params;
-  const { lang } = req.query;
+  const { lang,count } = req.query;
 
-  const perPage = 20;
+  const perPage = count || 20;
   const pageNumber = parseInt(page) || 1;
   const language = lang || "en-US";
 
@@ -99,14 +99,16 @@ export async function getMovieDetails(req, res) {
 
 export async function getSimilarMovies(req, res) {
   const { id } = req.params;
-  const { lang } = req.query;
+  const { lang,count } = req.query;
+
   const language = lang || "en-US";
+  const perPage = count || 20;
 
   try {
     const data = await fetchFromTMDB(
       `https://api.themoviedb.org/3/movie/${id}/similar?language=${language}&page=1`
     );
-    res.status(200).json({ success: true, similar: data.results });
+    res.status(200).json({ success: true, similar: data.results.slice(0, perPage) });
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
